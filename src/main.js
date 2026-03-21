@@ -3,7 +3,12 @@ import './style.css';
 // 공통 헤더 및 풋터 주입
 const headerHtml = `
 <header>
-  <div class="logo"><a href="/">Cordia.</a></div>
+  <div class="logo">
+    <a href="/">
+      <img src="/logo.png" alt="Cordia" class="logo-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';" />
+      <span class="logo-text" style="display: none;">Cordia.</span>
+    </a>
+  </div>
   <nav>
     <ul>
       <li><a href="/about/">회사소개</a></li>
