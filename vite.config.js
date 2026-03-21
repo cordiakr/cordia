@@ -9,6 +9,7 @@ export default defineConfig({
         about: resolve(__dirname, 'about/index.html'),
         products: resolve(__dirname, 'products/index.html'),
         support: resolve(__dirname, 'support/index.html'),
+        vida: resolve(__dirname, 'vida/index.html'),
       },
     },
   },
