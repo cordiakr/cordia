@@ -10,25 +10,59 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   </head>
   <body>
-    <main>
+    <main class="fade-in-up">
       <section id="hero" class="hero">
-        <h1>모든 디바이스 환경의 새로운 기준</h1>
-        <p>Cordia는 macOS부터 Windows, Android, Web 서비스까지 아우르는 강력하고 직관적인 솔루션을 개발합니다.<br/>
-        생산성을 혁신하고 일상을 단순하게 만드세요.</p>
-        <a href="/products/" class="cta-button">제품 모두 보기</a>
+        <div class="hero-content">
+          <div class="pill">Cordia 2026 Edition 🚀</div>
+          <h1 class="premium-title">모든 디바이스 환경의<br/><span class="text-gradient">새로운 기준</span></h1>
+          <p class="hero-description">
+            Cordia는 macOS에서 Windows, Android, 최신 Web 서비스까지 끝없이 확장되는<br/>최상급 인터페이스 패러다임을 제안합니다. 한계 없는 생산성을 경험하세요.
+          </p>
+          <div class="hero-actions">
+            <a href="/products/" class="cta-button">전체 라인업 탐색</a>
+            <a href="/about/" class="cta-button secondary-btn">브랜드 철학</a>
+          </div>
+        </div>
+        
+        <div class="hero-visual">
+          <div class="glass-card card-1"><span class="icon">▶️</span>VIDA</div>
+          <div class="glass-card card-2"><span class="icon">🏢</span>EsHub</div>
+          <div class="glass-card card-3"><span class="icon">🔐</span>BluePass</div>
+        </div>
       </section>
 
+      <div class="feature-strip">
+        <div class="stat"><strong>9+</strong><span>독보적인 프리미엄 앱스</span></div>
+        <div class="stat"><strong>∞</strong><span>단 하나의 무제한 통합 패스</span></div>
+        <div class="stat"><strong>1ms</strong><span>극한의 최적화 효율</span></div>
+        <div class="stat"><strong>100%</strong><span>모든 플랫폼 완벽 지원</span></div>
+      </div>
+
       <!-- Cordia Pass Section -->
-      <section id="cordia-pass" class="pass-section">
-        <h2 class="section-title">✨ 하나의 패스, 모든 가능성</h2>
-        <p>
-          복잡한 개별 구매는 잊으세요.<br/>
-          <strong>Cordia Pass</strong> 하나면 최상급 미디어 플레이어부터 고오급 파일 매니저, 보안 유틸리티까지<br/>
-          당신의 워크플로우를 극대화할 모든 프리미엄 플랫폼 앱을 무제한으로 누릴 수 있습니다.
-        </p>
-        <a href="/products/" class="cta-button" style="background: linear-gradient(135deg, #60a5fa, #c084fc); box-shadow: 0 4px 14px 0 rgba(168, 85, 247, 0.4);">
-          Cordia Pass 혜택 알아보기
-        </a>
+      <section id="cordia-pass" class="pass-section premium-pass layout-split">
+        <div class="pass-text-col">
+          <div class="pass-badge">🔥 BEST VALUE</div>
+          <h2 class="section-title" style="text-align: left;">하나의 패스, <span class="text-gradient">모든 가능성</span></h2>
+          <p>
+            복잡한 개별 결제 없이, 단 한 번의 합리적인 구매로 <strong>미디어 플레이어부터 고성능 파일 매니저, 부동산 ERP 플랫폼</strong>까지.<br/>당신의 라이프스타일과 비즈니스 워크플로우를 관통하는 압도적인 앱 생태계를 전개합니다.
+          </p>
+          <ul class="pass-features-list">
+            <li>✓ 앱 개별 구매 대비 최대 80% 획기적 비용 절감</li>
+            <li>✓ 향후 배포될 모든 차기작 및 프리미엄 업데이트 평생 제공</li>
+            <li>✓ 안전한 클라우드 동기화를 통한 전체 기기 환경 공유</li>
+          </ul>
+          <a href="/products/" class="cta-button premium-cta" style="margin-top:20px;">
+            Cordia Pro Pass 혜택 알아보기 &rarr;
+          </a>
+        </div>
+        <div class="pass-visual-col">
+          <div class="pro-pass-card">
+            <h4>Cordia</h4>
+            <h2>PRO PASS</h2>
+            <p>Full Access: macOS, Windows, Web</p>
+            <div class="chip"></div>
+          </div>
+        </div>
       </section>
     </main>
     <script type="module" src="/src/main.js"></script>
