@@ -570,7 +570,7 @@ footer {
   height: 100vw;
   max-width: 1200px;
   max-height: 1200px;
-  background: radial-gradient(circle, rgba(96, 165, 250, 0.08) 0%, rgba(168, 85, 247, 0.05) 40%, transparent 70%);
+  background: radial-gradient(circle, rgba(96, 165, 250, 0.25) 0%, rgba(168, 85, 247, 0.15) 40%, transparent 70%);
   transform: translate(-50%, -50%);
   z-index: 0;
   animation: pulseMesh 12s ease-in-out infinite alternate;
@@ -588,15 +588,17 @@ footer {
   align-items: center;
   justify-content: center;
   opacity: 0;
+  pointer-events: none;
   visibility: hidden;
-  transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1), transform 1.2s cubic-bezier(0.16, 1, 0.3, 1), visibility 1.2s;
-  transform: translateY(25px) scale(0.98);
+  transition: opacity 0.6s ease, transform 0.6s ease, visibility 0.6s;
+  transform: translateY(20px) scale(0.98);
   padding: 0 5%;
   z-index: 1;
 }
 
 .hero-slide.active {
   opacity: 1;
+  pointer-events: auto;
   visibility: visible;
   transform: translateY(0) scale(1);
   z-index: 10;
@@ -651,12 +653,16 @@ footer {
 /* Slider Controls */
 .slider-nav {
   position: absolute;
-  bottom: 40px;
+  bottom: 20px;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
-  gap: 14px;
-  z-index: 20;
+  gap: 12px;
+  z-index: 100;
+  background: rgba(255, 255, 255, 0.5);
+  padding: 10px 18px;
+  border-radius: 30px;
+  backdrop-filter: blur(10px);
 }
 
 .slider-dot {
@@ -785,18 +791,20 @@ footer {
   display: flex;
   justify-content: center;
   perspective: 1200px;
+  position: relative;
+  z-index: 2;
 }
 
 .pro-pass-card {
-  background: linear-gradient(to bottom right, #1c1c1e, #2c2c2e, #1a1a1c);
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: linear-gradient(135deg, #27272a 0%, #18181b 40%, #000000 100%);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 28px;
   width: 100%;
   max-width: 380px;
-  height: 260px;
-  padding: 34px;
+  height: 250px;
+  padding: 30px;
   color: white;
-  box-shadow: 0 40px 80px rgba(0, 0, 0, 0.15), 0 10px 30px rgba(0,0,0,0.1), inset 0 2px 0 rgba(255, 255, 255, 0.1);
+  box-shadow: 0 40px 80px rgba(0, 0, 0, 0.3), inset 0 2px 2px rgba(255, 255, 255, 0.2);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -809,14 +817,15 @@ footer {
 .pro-pass-card::after {
   content: '';
   position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, transparent 50%, rgba(255,255,255,0.05) 100%);
+  top: -50%; left: -50%; width: 200%; height: 200%;
+  background: linear-gradient(135deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.1) 20%, transparent 40%, transparent 100%);
   pointer-events: none;
+  transform: rotate(45deg);
 }
 
 .pro-pass-card:hover {
-  transform: rotateY(-5deg) rotateX(5deg) scale(1.04);
-  box-shadow: 0 50px 100px rgba(0, 0, 0, 0.2), 0 15px 40px rgba(0,0,0,0.1), inset 0 2px 0 rgba(255, 255, 255, 0.15);
+  transform: rotateY(0deg) rotateX(0deg) scale(1.05);
+  box-shadow: 0 50px 100px rgba(0, 0, 0, 0.4), inset 0 3px 3px rgba(255, 255, 255, 0.3);
 }
 
 .pro-pass-card h4 {
