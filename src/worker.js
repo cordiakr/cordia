@@ -1,5 +1,14 @@
-export async function onRequest(context) {
-  const { request, env } = context;
+export default {
+  async fetch(request, env, ctx) {
+    const url = new URL(request.url);
+    if (url.pathname === '/api/feedback') {
+      return handleFeedback(request, env);
+    }
+    return env.ASSETS.fetch(request);
+  }
+}
+
+async function handleFeedback(request, env) {
   const { FEEDBACK_KV } = env;
 
   if (request.method === 'GET') {
@@ -8,7 +17,6 @@ export async function onRequest(context) {
     if (rawData) {
       posts = JSON.parse(rawData);
     } else {
-      // Seed with mock data
       posts = [
         { id: '3', product: 'vida', type: 'feature', title: 'smi 자막 파일 외에 확장 툴 지원 요청', status: 'pending', createdAt: new Date().toISOString() },
         { id: '2', product: 'cordiafe', type: 'bug', title: 'M3 칩 환경에서 패널 전환 시 간헐적 지연 발생', status: 'resolving', createdAt: new Date().toISOString() },
@@ -40,7 +48,7 @@ export async function onRequest(context) {
       type,
       title,
       content,
-      status: 'pending', 
+      status: 'pending',
       createdAt: new Date().toISOString()
     };
 
@@ -56,12 +64,8 @@ export async function onRequest(context) {
       ];
     }
     
-    // Insert newest first
     posts.unshift(newPost);
-    
-    if (posts.length > 50) {
-      posts = posts.slice(0, 50);
-    }
+    if (posts.length > 50) posts = posts.slice(0, 50);
 
     await FEEDBACK_KV.put('posts', JSON.stringify(posts));
 
