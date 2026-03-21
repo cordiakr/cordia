@@ -4,24 +4,104 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>고객지원 - Cordia</title>
+    <title>고객지원 및 피드백 - Cordia</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   </head>
   <body>
     <main>
-      <section id="support" style="min-height: calc(100vh - 70px); display: flex; align-items: center; justify-content: center;">
-        <div class="support-container" style="width: 100%;">
-          <h3>무엇을 도와드릴까요?</h3>
-          <p>앱 사용 중 궁금한 점이 있거나 문제가 발생했다면 언제든 연락해 주세요.</p>
-          <div class="contact-links" style="margin-top: 40px;">
-            <a href="mailto:support@cordia.kr" class="contact-link">이메일 지원 (support@cordia.kr)</a>
-            <a href="#" class="contact-link" onclick="alert('자주 묻는 질문(FAQ) 페이지는 준비 중입니다.')">자주 묻는 질문 (FAQ)</a>
+      <section id="support">
+        <h2 class="section-title">피드백 게시판</h2>
+        <p class="section-subtitle">각 앱에 대한 의견이나 버그 리포트를 남겨주세요. 모든 피드백은 Cordia 팀이 꼼꼼히 검토합니다.</p>
+
+        <div class="board-container">
+          <!-- 피드백 작성 폼 -->
+          <div class="feedback-form-card">
+            <h3 style="margin-bottom: 20px; font-size: 1.2rem;">새 의견 작성하기</h3>
+            <form id="feedback-form">
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="product">제품 선택</label>
+                  <select id="product" name="product" required>
+                    <option value="" disabled selected>제품을 선택하세요</option>
+                    <option value="vida">VIDA</option>
+                    <option value="cordiafe">Cordia FE</option>
+                    <option value="newtoncommander">Newton Commander</option>
+                    <option value="keymap">KeyMap</option>
+                    <option value="quickfolder">Quick Folder</option>
+                    <option value="scapc">scapC</option>
+                    <option value="bluepass">BluePass</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="type">분류</label>
+                  <select id="type" name="type" required>
+                    <option value="bug">버그 리포트</option>
+                    <option value="feature">기능 제안</option>
+                    <option value="general">일반 문의</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="title">제목</label>
+                <input type="text" id="title" name="title" placeholder="피드백 제목을 간단히 적어주세요." required />
+              </div>
+
+              <div class="form-group">
+                <label for="content">내용</label>
+                <textarea id="content" name="content" rows="4" placeholder="상세한 내용을 적어주시면 개선에 큰 도움이 됩니다." required></textarea>
+              </div>
+
+              <button type="submit" class="submit-button">제출하기</button>
+            </form>
+          </div>
+
+          <!-- 게시물 목록 (Mock UI) -->
+          <div class="board-list">
+            <h3 style="margin-bottom: 20px; font-size: 1.2rem;">최근 피드백 목록</h3>
+            <table class="board-table">
+              <thead>
+                <tr>
+                  <th width="15%">제품</th>
+                  <th width="15%">분류</th>
+                  <th>제목</th>
+                  <th width="15%">상태</th>
+                </tr>
+              </thead>
+              <tbody id="board-tbody">
+                <tr>
+                  <td><span class="badge blue">VIDA</span></td>
+                  <td>기능 제안</td>
+                  <td class="board-title">smi 자막 파일 외에 확장 툴 지원 요청</td>
+                  <td><span class="status-badge pending">검토 중</span></td>
+                </tr>
+                <tr>
+                  <td><span class="badge purple">Cordia FE</span></td>
+                  <td>버그 리포트</td>
+                  <td class="board-title">M3 칩 환경에서 패널 전환 시 간헐적 지연 발생</td>
+                  <td><span class="status-badge resolving">수정 중</span></td>
+                </tr>
+                <tr>
+                  <td><span class="badge green">Quick Folder</span></td>
+                  <td>일반 문의</td>
+                  <td class="board-title">단축키 커스텀 설정은 어떻게 하나요?</td>
+                  <td><span class="status-badge done">답변 완료</span></td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
       </section>
     </main>
     <script type="module" src="/src/main.js"></script>
+    <script>
+      // 폼 제출 시 인터셉트하여 로직 설명 알림
+      document.getElementById('feedback-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        alert('디자인과 데모 UI가 완성되었습니다!\n\n현재 정적인 웹페이지이기 때문에, 실제로 의견을 저장하려면 백엔드(데이터베이스 연동) 구축이 필요합니다.\nFormspree와 같은 무료 폼 서비스를 연동할지, 아니면 추후 별도의 DB를 구축하실지 말씀해 주세요.');
+      });
+    </script>
   </body>
 </html>
