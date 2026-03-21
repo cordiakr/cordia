@@ -3,3 +3,7 @@ compatibility_date = "2024-03-21"
 
 [assets]
 directory = "./dist"
+
+[[kv_namespaces]]
+binding = "FEEDBACK_KV"
+id = "f4bddd047daa4cbcbe665fbf94d5fa0b"

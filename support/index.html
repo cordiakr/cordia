@@ -100,10 +100,99 @@
     </main>
     <script type="module" src="/src/main.js"></script>
     <script>
-      // 폼 제출 시 인터셉트하여 로직 설명 알림
-      document.getElementById('feedback-form').addEventListener('submit', function(e) {
+      // Load and render board list
+      const tbody = document.getElementById('board-tbody');
+      const submitBtn = document.querySelector('.submit-button');
+      
+      const productMap = {
+        vida: { name: 'VIDA', color: 'blue' },
+        cordiafe: { name: 'Cordia FE', color: 'purple' },
+        newtoncommander: { name: 'Newton Commander', color: 'purple' },
+        quickfolder: { name: 'Quick Folder', color: 'green' },
+        keymap: { name: 'KeyMap', color: 'yellow' },
+        scapc: { name: 'scapC', color: 'pink' },
+        bluepass: { name: 'BluePass', color: 'blue' },
+        epgmn: { name: 'EPGMN', color: 'purple' },
+        eyecatch: { name: 'EyeCatch', color: 'pink' },
+        eshub: { name: 'EsHub', color: 'yellow' }
+      };
+
+      const typeMap = {
+        bug: '버그 리포트',
+        feature: '기능 제안',
+        general: '일반 문의'
+      };
+
+      const statusMap = {
+        pending: { label: '접수(검토 중)', class: 'pending' },
+        resolving: { label: '수정 중', class: 'resolving' },
+        done: { label: '답변 완료', class: 'done' }
+      };
+
+      async function fetchPosts() {
+        try {
+          const res = await fetch('/api/feedback');
+          if (!res.ok) return;
+          const posts = await res.json();
+          
+          tbody.innerHTML = '';
+          posts.forEach(post => {
+            const tr = document.createElement('tr');
+            const pInfo = productMap[post.product] || { name: post.product, color: 'blue' };
+            const typeStr = typeMap[post.type] || post.type;
+            const sInfo = statusMap[post.status] || { label: '검토 중', class: 'pending' };
+
+            // Escape HTML for XSS prevention
+            const escapeHTML = str => str.replace(/[&<>'"]/g, tag => ({'&': '&amp;','<': '&lt;','>': '&gt;',"'": '&#39;','"': '&quot;'}[tag]));
+
+            tr.innerHTML = `
+              <td><span class="badge ${pInfo.color}">${pInfo.name}</span></td>
+              <td>${typeStr}</td>
+              <td class="board-title">${escapeHTML(post.title)}</td>
+              <td><span class="status-badge ${sInfo.class}">${sInfo.label}</span></td>
+            `;
+            tbody.appendChild(tr);
+          });
+        } catch(e) { console.error('Failed to load posts', e); }
+      }
+
+      // Initial load
+      fetchPosts();
+
+      // Submit form
+      document.getElementById('feedback-form').addEventListener('submit', async function(e) {
         e.preventDefault();
-        alert('디자인과 데모 UI가 완성되었습니다!\n\n현재 정적인 웹페이지이기 때문에, 실제로 의견을 저장하려면 백엔드(데이터베이스 연동) 구축이 필요합니다.\nFormspree와 같은 무료 폼 서비스를 연동할지, 아니면 추후 별도의 DB를 구축하실지 말씀해 주세요.');
+        
+        submitBtn.disabled = true;
+        submitBtn.textContent = '제출 중...';
+
+        const data = {
+          product: document.getElementById('product').value,
+          type: document.getElementById('type').value,
+          title: document.getElementById('title').value,
+          content: document.getElementById('content').value
+        };
+
+        try {
+          const res = await fetch('/api/feedback', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+          });
+
+          if (res.ok) {
+            alert('피드백이 성공적으로 등록되었습니다. 즉시 확인 후 처리하겠습니다!');
+            e.target.reset();
+            fetchPosts(); // Reload board
+          } else {
+            alert('등록에 실패했습니다. 다시 시도해 주세요.');
+          }
+        } catch(e) {
+          alert('네트워크 오류가 발생했습니다.');
+        } finally {
+          submitBtn.disabled = false;
+          submitBtn.textContent = '제출하기';
+        }
       });
     </script>
   </body>
