@@ -72,8 +72,13 @@
           card.className = 'post-card';
           
           const escapeHTML = str => (str||'').replace(/[&<>'"]/g, tag => ({'&': '&amp;','<': '&lt;','>': '&gt;',"'": '&#39;','"': '&quot;'}[tag]));
-          
-          card.innerHTML = `
+          const imageHtml = post.hasImage ? `
+              <div style="margin-top: 16px;">
+                <img src="/api/feedback/image?id=${post.id}" alt="유저 첨부 이미지" style="max-width: 100%; max-height: 400px; border-radius: 8px; border: 1px solid #3f3f46; display: block;" />
+              </div>
+            ` : '';
+            
+            card.innerHTML = `
             <div class="post-header">
               <div style="display:flex; gap: 10px; align-items: center;">
                 <span class="badge blue">${post.product.toUpperCase()}</span>
@@ -83,7 +88,10 @@
               <strong style="color: #c084fc;">ID: ${post.id}</strong>
             </div>
             <h3 class="title">${escapeHTML(post.title)}</h3>
-            <div class="content">${escapeHTML(post.content).replace(/\n/g, '<br/>')}</div>
+            <div class="content">
+              ${escapeHTML(post.content).replace(/\n/g, '<br/>')}
+              ${imageHtml}
+            </div>
             
             <div class="controls">
               <select id="status-${post.id}">
