@@ -553,8 +553,7 @@ footer {
 /* Hero Slider Styles */
 .hero {
   position: relative;
-  min-height: 65vh;
-  padding: 80px 0 100px 0;
+  height: 420px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -654,7 +653,7 @@ footer {
 /* Slider Controls */
 .slider-nav {
   position: absolute;
-  bottom: 20px;
+  bottom: 15px;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
