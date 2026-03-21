@@ -10,6 +10,7 @@ export default defineConfig({
         products: resolve(__dirname, 'products/index.html'),
         support: resolve(__dirname, 'support/index.html'),
         vida: resolve(__dirname, 'vida/index.html'),
+        pass: resolve(__dirname, 'pass/index.html'),
       },
     },
   },
