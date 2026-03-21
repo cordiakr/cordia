@@ -138,20 +138,50 @@
           tbody.innerHTML = '';
           posts.forEach(post => {
             const tr = document.createElement('tr');
+            tr.style.cursor = 'pointer';
+            tr.classList.add('post-row');
+            tr.onclick = () => {
+              const detailTr = document.getElementById(`detail-${post.id}`);
+              if (detailTr) {
+                const isHidden = detailTr.style.display === 'none';
+                document.querySelectorAll('.detail-row').forEach(el => el.style.display = 'none');
+                detailTr.style.display = isHidden ? 'table-row' : 'none';
+              }
+            };
+            
             const pInfo = productMap[post.product] || { name: post.product, color: 'blue' };
             const typeStr = typeMap[post.type] || post.type;
             const sInfo = statusMap[post.status] || { label: '검토 중', class: 'pending' };
 
-            // Escape HTML for XSS prevention
-            const escapeHTML = str => str.replace(/[&<>'"]/g, tag => ({'&': '&amp;','<': '&lt;','>': '&gt;',"'": '&#39;','"': '&quot;'}[tag]));
+            const escapeHTML = str => (str||'').replace(/[&<>'"]/g, tag => ({'&': '&amp;','<': '&lt;','>': '&gt;',"'": '&#39;','"': '&quot;'}[tag]));
 
             tr.innerHTML = `
               <td><span class="badge ${pInfo.color}">${pInfo.name}</span></td>
               <td>${typeStr}</td>
-              <td class="board-title">${escapeHTML(post.title)}</td>
+              <td class="board-title" style="color:#e4e4e7;">${escapeHTML(post.title)}</td>
               <td><span class="status-badge ${sInfo.class}">${sInfo.label}</span></td>
             `;
             tbody.appendChild(tr);
+
+            const detailTr = document.createElement('tr');
+            detailTr.id = `detail-${post.id}`;
+            detailTr.className = 'detail-row';
+            detailTr.style.display = 'none';
+            
+            const replyHtml = post.reply ? `
+              <div style="margin-top: 20px; padding: 16px 20px; background: rgba(59, 130, 246, 0.08); border: 1px solid rgba(59,130,246,0.2); border-radius: 8px;">
+                <strong style="color:#60a5fa; display:block; margin-bottom:8px; font-size:0.95rem;">코르디아 지원팀 답변</strong>
+                <div style="color: #e4e4e7; line-height: 1.6;">${escapeHTML(post.reply).replace(/\n/g, '<br/>')}</div>
+              </div>
+            ` : '';
+
+            detailTr.innerHTML = `
+              <td colspan="4" style="padding: 24px; text-align: left; background: #111113; border-bottom: 1px solid #27272a;">
+                <div style="color: #a1a1aa; line-height: 1.6; font-size: 1rem; border-left: 3px solid #3f3f46; padding-left: 16px;">${escapeHTML(post.content).replace(/\n/g, '<br/>')}</div>
+                ${replyHtml}
+              </td>
+            `;
+            tbody.appendChild(detailTr);
           });
         } catch(e) { console.error('Failed to load posts', e); }
       }

@@ -11,6 +11,7 @@ export default defineConfig({
         support: resolve(__dirname, 'support/index.html'),
         vida: resolve(__dirname, 'vida/index.html'),
         pass: resolve(__dirname, 'pass/index.html'),
+        admin: resolve(__dirname, 'admin/index.html'),
       },
     },
   },
