@@ -53,7 +53,14 @@ async function handleFeedback(request, env) {
       ];
       await FEEDBACK_KV.put('posts', JSON.stringify(posts));
     }
-    return new Response(JSON.stringify(posts), {
+    
+    // Scrub passwords before sending to client
+    const scrubbedPosts = posts.map(p => {
+      const { password, ...rest } = p;
+      return rest;
+    });
+
+    return new Response(JSON.stringify(scrubbedPosts), {
       headers: { 'Content-Type': 'application/json;charset=UTF-8' },
     });
   }
@@ -66,7 +73,7 @@ async function handleFeedback(request, env) {
       return new Response('Invalid Request', { status: 400 });
     }
 
-    const { product, type, title, content, imageBase64 } = body;
+    const { product, type, title, content, imageBase64, password } = body;
     if (!product || !type || !title || !content) {
       return new Response('Missing fields', { status: 400 });
     }
@@ -86,6 +93,7 @@ async function handleFeedback(request, env) {
       status: 'pending',
       reply: '',
       hasImage: !!imageBase64,
+      password: password || '',
       createdAt: new Date().toISOString()
     };
     
@@ -106,9 +114,6 @@ async function handleFeedback(request, env) {
 
   if (request.method === 'PATCH' || request.method === 'DELETE') {
     const auth = request.headers.get('Authorization');
-    if (auth !== ADMIN_PASSWORD) {
-      return new Response('Unauthorized', { status: 401 });
-    }
 
     let posts = [];
     const rawData = await FEEDBACK_KV.get('posts');
@@ -121,15 +126,33 @@ async function handleFeedback(request, env) {
     const postIndex = posts.findIndex(p => p.id === id);
     if (postIndex === -1) return new Response('Not found', { status: 404 });
 
+    const post = posts[postIndex];
+    const isAdmin = (auth === ADMIN_PASSWORD);
+    const isOwner = (post.password && auth === post.password);
+
+    if (!isAdmin && !isOwner) {
+      return new Response('Unauthorized or wrong password', { status: 401 });
+    }
+
     if (request.method === 'DELETE') {
-      if (posts[postIndex].hasImage) {
+      if (post.hasImage) {
         await FEEDBACK_KV.delete('img_' + id);
       }
       posts.splice(postIndex, 1);
     } else if (request.method === 'PATCH') {
-      const { status, reply } = body;
-      if (status !== undefined) posts[postIndex].status = status;
-      if (reply !== undefined) posts[postIndex].reply = reply;
+      const { status, reply, title, content } = body;
+      
+      // Admin update logic
+      if (isAdmin) {
+        if (status !== undefined) post.status = status;
+        if (reply !== undefined) post.reply = reply;
+      }
+      
+      // User update logic
+      if (isOwner || isAdmin) {
+        if (title !== undefined) post.title = title;
+        if (content !== undefined) post.content = content;
+      }
     }
 
     await FEEDBACK_KV.put('posts', JSON.stringify(posts));

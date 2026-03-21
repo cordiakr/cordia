@@ -57,12 +57,18 @@
                 <textarea id="content" name="content" rows="4" placeholder="상세한 내용을 적어주시면 개선에 큰 도움이 됩니다." required></textarea>
               </div>
 
-              <div class="form-group" style="margin-bottom: 20px;">
-                <label for="image">캡쳐 이미지 첨부 (선택)</label>
-                <input type="file" id="image" name="image" accept="image/*" style="display: block; width: 100%; padding: 10px; background: rgba(255,255,255,0.05); border: 1px dashed rgba(255,255,255,0.1); border-radius: 8px; color: #a1a1aa; font-family: inherit;" />
+              <div class="form-row">
+                <div class="form-group" style="flex:1;">
+                  <label for="image">캡쳐 이미지 첨부 (선택)</label>
+                  <input type="file" id="image" name="image" accept="image/*" style="display: block; width: 100%; padding: 10px; background: rgba(255,255,255,0.05); border: 1px dashed rgba(255,255,255,0.1); border-radius: 8px; color: #a1a1aa; font-family: inherit; box-sizing: border-box;" />
+                </div>
+                <div class="form-group" style="flex:1;">
+                  <label for="password">글 비밀번호 (수정/삭제용)</label>
+                  <input type="password" id="password" name="password" placeholder="나중에 수정/삭제할 때 사용할 암호 설정" style="display: block; width: 100%; padding: 10px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: #fff; font-family: inherit; box-sizing: border-box;" required />
+                </div>
               </div>
 
-              <button type="submit" class="submit-button">제출하기</button>
+              <button type="submit" class="submit-button" style="margin-top: 10px;">제출하기</button>
             </form>
           </div>
 
@@ -188,11 +194,31 @@
 
             detailTr.innerHTML = `
               <td colspan="4" style="padding: 24px; text-align: left; background: #111113; border-bottom: 1px solid #27272a;">
-                <div style="color: #a1a1aa; line-height: 1.6; font-size: 1rem; border-left: 3px solid #3f3f46; padding-left: 16px;">
+                <div style="color: #a1a1aa; line-height: 1.6; font-size: 1rem; border-left: 3px solid #3f3f46; padding-left: 16px;" id="post-content-${post.id}">
                   ${escapeHTML(post.content).replace(/\n/g, '<br/>')}
                   ${imageHtml}
                 </div>
                 ${replyHtml}
+
+                <div style="text-align: right; margin-top: 16px;">
+                  <button type="button" onclick="document.getElementById('manage-${post.id}').style.display='block'" style="background: none; border: 1px solid #3f3f46; color: #a1a1aa; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 0.85rem;">내 게시물 수정/삭제</button>
+                </div>
+                <div id="manage-${post.id}" style="display: none; margin-top: 16px; background: #18181b; padding: 16px; border: 1px solid #27272a; border-radius: 8px;">
+                  <div style="margin-bottom: 12px;">
+                    <input type="password" id="manage-pwd-${post.id}" placeholder="게시물 설정 시 입력한 비밀번호" style="padding: 8px; border-radius: 4px; border: 1px solid #3f3f46; background: #09090b; color: #fff; width: 220px;" />
+                  </div>
+                  <div style="margin-bottom: 12px;">
+                    <input type="text" id="manage-title-${post.id}" value="${escapeHTML(post.title)}" style="padding: 8px; border-radius: 4px; border: 1px solid #3f3f46; background: #09090b; color: #fff; width: 100%; box-sizing: border-box;" />
+                  </div>
+                  <div style="margin-bottom: 12px;">
+                    <textarea id="manage-content-${post.id}" rows="4" style="padding: 8px; border-radius: 4px; border: 1px solid #3f3f46; background: #09090b; color: #fff; width: 100%; box-sizing: border-box;">${post.content}</textarea>
+                  </div>
+                  <div>
+                    <button type="button" onclick="userUpdatePost('${post.id}')" style="padding: 8px 16px; background: #3b82f6; border: none; color: #fff; border-radius: 4px; cursor: pointer;">본문 수정 완료</button>
+                    <button type="button" onclick="userDeletePost('${post.id}')" style="padding: 8px 16px; background: #ef4444; border: none; color: #fff; border-radius: 4px; cursor: pointer; margin-left: 8px;">해당 글 영구 삭제</button>
+                    <button type="button" onclick="document.getElementById('manage-${post.id}').style.display='none'" style="padding: 8px 16px; background: transparent; border: 1px solid #3f3f46; color: #a1a1aa; border-radius: 4px; cursor: pointer; margin-left: 8px;">취소</button>
+                  </div>
+                </div>
               </td>
             `;
             tbody.appendChild(detailTr);
@@ -243,6 +269,7 @@
           type: document.getElementById('type').value,
           title: document.getElementById('title').value,
           content: document.getElementById('content').value,
+          password: document.getElementById('password').value,
           imageBase64
         };
 
@@ -260,13 +287,57 @@
           } else {
             alert('등록에 실패했습니다. 다시 시도해 주세요.');
           }
-        } catch(e) {
+        } catch(err) {
           alert('네트워크 오류가 발생했습니다.');
         } finally {
           submitBtn.disabled = false;
           submitBtn.textContent = '제출하기';
         }
       });
+
+      // User Update handler
+      window.userUpdatePost = async function(id) {
+        const pwd = document.getElementById(`manage-pwd-${id}`).value;
+        const title = document.getElementById(`manage-title-${id}`).value;
+        const content = document.getElementById(`manage-content-${id}`).value;
+
+        if (!pwd) return alert('비밀번호를 입력해주세요.');
+
+        try {
+          const res = await fetch('/api/feedback', {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json', 'Authorization': pwd },
+            body: JSON.stringify({ id, title, content })
+          });
+          if (res.ok) {
+            alert('수정 완료!');
+            fetchPosts();
+          } else {
+            alert('비밀번호가 틀렸습니다. (또는 권한 없음)');
+          }
+        } catch(e) { alert('네트워크 오류 발생'); }
+      };
+
+      // User Delete handler
+      window.userDeletePost = async function(id) {
+        const pwd = document.getElementById(`manage-pwd-${id}`).value;
+        if (!pwd) return alert('비밀번호를 입력해주세요.');
+        if (!confirm('복구할 수 없습니다. 삭제하시겠습니까?')) return;
+
+        try {
+          const res = await fetch('/api/feedback', {
+            method: 'DELETE',
+            headers: { 'Content-Type': 'application/json', 'Authorization': pwd },
+            body: JSON.stringify({ id })
+          });
+          if (res.ok) {
+            alert('삭제 완료!');
+            fetchPosts();
+          } else {
+            alert('비밀번호가 틀렸거나 권한이 없습니다.');
+          }
+        } catch(e) { alert('네트워크 오류 발생'); }
+      };
     </script>
   </body>
 </html>
