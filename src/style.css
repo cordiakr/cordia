@@ -413,3 +413,58 @@ footer {
 .status-badge.pending { border: 1px solid var(--border-subtle); color: var(--text-secondary); }
 .status-badge.resolving { border: 1px solid #c084fc; color: #c084fc; }
 .status-badge.done { border: 1px solid #4ade80; color: #4ade80; }
+
+/* Cordia Pass Styles */
+.pass-section {
+  text-align: center;
+  padding: 80px 20px;
+  background: linear-gradient(180deg, var(--bg-main) 0%, rgba(59, 130, 246, 0.05) 50%, var(--bg-main) 100%);
+  border-top: 1px solid var(--border-subtle);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.pass-section .section-title {
+  background: linear-gradient(135deg, #60a5fa, #c084fc);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 24px;
+}
+
+.pass-section p {
+  font-size: 1.15rem;
+  color: var(--text-secondary);
+  max-width: 700px;
+  margin: 0 auto 40px auto;
+  line-height: 1.7;
+}
+
+.pass-banner {
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(168, 85, 247, 0.1));
+  border: 1px solid rgba(168, 85, 247, 0.3);
+  border-radius: 16px;
+  padding: 40px;
+  text-align: center;
+  margin-bottom: 60px;
+  box-shadow: 0 10px 30px rgba(168, 85, 247, 0.15);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.pass-banner:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 40px rgba(168, 85, 247, 0.25);
+}
+
+.pass-banner h3 {
+  font-size: 1.8rem;
+  font-weight: 800;
+  margin-bottom: 12px;
+  background: linear-gradient(135deg, #60a5fa, #c084fc);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.pass-banner p {
+  font-size: 1.05rem;
+  color: var(--text-secondary);
+  margin-bottom: 0;
+}
