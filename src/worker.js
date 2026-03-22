@@ -7,11 +7,206 @@ export default {
     if (url.pathname === '/api/feedback/image') {
       return handleImage(url, env);
     }
+    if (url.pathname.startsWith('/api/yousaver/')) {
+      return handleYouSaver(request, url, env);
+    }
     return env.ASSETS.fetch(request);
   }
 }
 
 const ADMIN_PASSWORD = 'cordia_admin!';
+
+function corsHeaders() {
+  return {
+    'Content-Type': 'application/json;charset=UTF-8',
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Methods': 'GET,POST,PUT,OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type,Authorization',
+  };
+}
+
+// ─── YouSaver Serial Number System ───
+
+async function handleYouSaver(request, url, env) {
+  if (request.method === 'OPTIONS') {
+    return new Response(null, { status: 204, headers: corsHeaders() });
+  }
+
+  const path = url.pathname;
+
+  if (path === '/api/yousaver/serial/status' && request.method === 'GET') {
+    return yousaverStatus(env);
+  }
+  if (path === '/api/yousaver/serial/generate' && request.method === 'POST') {
+    return yousaverGenerate(env);
+  }
+  if (path === '/api/yousaver/serial/validate' && request.method === 'POST') {
+    return yousaverValidate(request, env);
+  }
+  if (path === '/api/yousaver/admin/limit' && request.method === 'PUT') {
+    return yousaverAdminLimit(request, env);
+  }
+  if (path === '/api/yousaver/admin/serials' && request.method === 'GET') {
+    return yousaverAdminSerials(request, env);
+  }
+
+  return new Response(JSON.stringify({ error: 'Not found' }), { status: 404, headers: corsHeaders() });
+}
+
+function todayKey() {
+  const d = new Date();
+  return `${d.getUTCFullYear()}-${String(d.getUTCMonth()+1).padStart(2,'0')}-${String(d.getUTCDate()).padStart(2,'0')}`;
+}
+
+function generateSerial() {
+  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  const segments = [];
+  for (let s = 0; s < 4; s++) {
+    let seg = '';
+    for (let i = 0; i < 4; i++) {
+      seg += chars[Math.floor(Math.random() * chars.length)];
+    }
+    segments.push(seg);
+  }
+  return segments.join('-');
+}
+
+async function getLimit(env) {
+  const val = await env.FEEDBACK_KV.get('yousaver:limit');
+  return val ? parseInt(val) : 10;
+}
+
+async function getTodayCount(env) {
+  const val = await env.FEEDBACK_KV.get('yousaver:count:' + todayKey());
+  return val ? parseInt(val) : 0;
+}
+
+// GET /api/yousaver/serial/status
+async function yousaverStatus(env) {
+  const limit = await getLimit(env);
+  const count = await getTodayCount(env);
+  return new Response(JSON.stringify({
+    limit,
+    used: count,
+    remaining: Math.max(0, limit - count),
+    date: todayKey(),
+  }), { headers: corsHeaders() });
+}
+
+// POST /api/yousaver/serial/generate
+async function yousaverGenerate(env) {
+  const limit = await getLimit(env);
+  const count = await getTodayCount(env);
+
+  if (count >= limit) {
+    return new Response(JSON.stringify({
+      error: 'daily_limit_reached',
+      message: '오늘의 일련번호 발급이 마감되었습니다. 내일 다시 방문해주세요!',
+      remaining: 0,
+    }), { status: 429, headers: corsHeaders() });
+  }
+
+  const serial = generateSerial();
+  await env.FEEDBACK_KV.put('yousaver:serial:' + serial, JSON.stringify({
+    created: new Date().toISOString(),
+    used: false,
+  }));
+
+  const newCount = count + 1;
+  // TTL 48h to auto-cleanup daily counts
+  await env.FEEDBACK_KV.put('yousaver:count:' + todayKey(), String(newCount), { expirationTtl: 172800 });
+
+  return new Response(JSON.stringify({
+    serial,
+    remaining: Math.max(0, limit - newCount),
+  }), { status: 201, headers: corsHeaders() });
+}
+
+// POST /api/yousaver/serial/validate
+async function yousaverValidate(request, env) {
+  let body;
+  try { body = await request.json(); } catch(e) {
+    return new Response(JSON.stringify({ error: 'Invalid request' }), { status: 400, headers: corsHeaders() });
+  }
+
+  const { serial } = body;
+  if (!serial) {
+    return new Response(JSON.stringify({ error: 'Missing serial' }), { status: 400, headers: corsHeaders() });
+  }
+
+  const key = 'yousaver:serial:' + serial.toUpperCase().trim();
+  const data = await env.FEEDBACK_KV.get(key);
+
+  if (!data) {
+    return new Response(JSON.stringify({ valid: false, error: '유효하지 않은 일련번호입니다.' }), { status: 404, headers: corsHeaders() });
+  }
+
+  const info = JSON.parse(data);
+  if (info.used) {
+    return new Response(JSON.stringify({ valid: false, error: '이미 사용된 일련번호입니다.' }), { status: 409, headers: corsHeaders() });
+  }
+
+  // Mark as used
+  info.used = true;
+  info.usedAt = new Date().toISOString();
+  await env.FEEDBACK_KV.put(key, JSON.stringify(info));
+
+  return new Response(JSON.stringify({ valid: true, message: '활성화 완료!' }), { headers: corsHeaders() });
+}
+
+// PUT /api/yousaver/admin/limit (admin only)
+async function yousaverAdminLimit(request, env) {
+  const auth = request.headers.get('Authorization');
+  if (auth !== ADMIN_PASSWORD) {
+    return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401, headers: corsHeaders() });
+  }
+
+  let body;
+  try { body = await request.json(); } catch(e) {
+    return new Response(JSON.stringify({ error: 'Invalid request' }), { status: 400, headers: corsHeaders() });
+  }
+
+  const { limit } = body;
+  if (!limit || typeof limit !== 'number' || limit < 1) {
+    return new Response(JSON.stringify({ error: 'Invalid limit value' }), { status: 400, headers: corsHeaders() });
+  }
+
+  await env.FEEDBACK_KV.put('yousaver:limit', String(limit));
+  return new Response(JSON.stringify({ success: true, limit }), { headers: corsHeaders() });
+}
+
+// GET /api/yousaver/admin/serials (admin only)
+async function yousaverAdminSerials(request, env) {
+  const auth = request.headers.get('Authorization');
+  if (auth !== ADMIN_PASSWORD) {
+    return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401, headers: corsHeaders() });
+  }
+
+  const list = await env.FEEDBACK_KV.list({ prefix: 'yousaver:serial:' });
+  const serials = [];
+  for (const key of list.keys) {
+    const data = await env.FEEDBACK_KV.get(key.name);
+    if (data) {
+      const info = JSON.parse(data);
+      serials.push({
+        serial: key.name.replace('yousaver:serial:', ''),
+        ...info,
+      });
+    }
+  }
+
+  const limit = await getLimit(env);
+  const count = await getTodayCount(env);
+
+  return new Response(JSON.stringify({
+    limit,
+    todayUsed: count,
+    todayRemaining: Math.max(0, limit - count),
+    serials,
+  }), { headers: corsHeaders() });
+}
+
+// ─── Feedback System (existing) ───
 
 async function handleImage(url, env) {
   const id = url.searchParams.get('id');
@@ -54,7 +249,6 @@ async function handleFeedback(request, env) {
       await FEEDBACK_KV.put('posts', JSON.stringify(posts));
     }
     
-    // Scrub passwords before sending to client
     const scrubbedPosts = posts.map(p => {
       const { password, ...rest } = p;
       return rest;
@@ -142,13 +336,11 @@ async function handleFeedback(request, env) {
     } else if (request.method === 'PATCH') {
       const { status, reply, title, content } = body;
       
-      // Admin update logic
       if (isAdmin) {
         if (status !== undefined) post.status = status;
         if (reply !== undefined) post.reply = reply;
       }
       
-      // User update logic
       if (isOwner || isAdmin) {
         if (title !== undefined) post.title = title;
         if (content !== undefined) post.content = content;

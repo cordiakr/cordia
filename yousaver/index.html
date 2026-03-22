@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>YouSaver - YouTube 영상 다운로더 | Cordia</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+      body { margin: 0; padding: 0; }
+      .serial-display {
+        font-family: 'Courier New', monospace;
+        font-size: 1.8rem;
+        font-weight: 700;
+        letter-spacing: 3px;
+        padding: 16px 32px;
+        background: rgba(59,130,246,0.15);
+        border: 2px dashed rgba(59,130,246,0.4);
+        border-radius: 12px;
+        color: #60a5fa;
+        user-select: all;
+        cursor: pointer;
+        transition: background 0.2s;
+      }
+      .serial-display:hover {
+        background: rgba(59,130,246,0.25);
+      }
+      .action-btn {
+        display: inline-block;
+        padding: 16px 36px;
+        border-radius: 14px;
+        font-weight: 700;
+        font-size: 1rem;
+        text-decoration: none;
+        cursor: pointer;
+        border: none;
+        transition: opacity 0.2s, transform 0.15s;
+        font-family: 'Inter', sans-serif;
+      }
+      .action-btn:hover { opacity: 0.85; transform: translateY(-1px); }
+      .action-btn:active { transform: translateY(0); }
+      .action-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+      .remaining-badge {
+        display: inline-block;
+        padding: 6px 16px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 600;
+      }
+      #serial-result {
+        min-height: 80px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="fade-in-up" style="background: #000000; color: #ffffff; position: relative; overflow: hidden; padding-bottom: 120px; font-family: 'Inter', sans-serif; min-height: 100vh;">
+      
+      <!-- Ambient gradient -->
+      <div style="position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 150vw; height: 1000px; background: radial-gradient(ellipse at top, rgba(59,130,246,0.18) 0%, rgba(34,197,94,0.06) 40%, transparent 70%); z-index: 0; pointer-events: none;"></div>
+
+      <!-- Hero -->
+      <section style="position: relative; z-index: 1; padding: 160px 20px 60px; text-align: center;">
+        <div style="display: inline-block; padding: 6px 18px; border: 1px solid rgba(59,130,246,0.3); border-radius: 30px; background: rgba(59,130,246,0.1); color: #93c5fd; font-weight: 600; font-size: 0.85rem; letter-spacing: 1px; margin-bottom: 24px;">
+          ⬇️ YouTube 영상을 Mac에 직접 저장
+        </div>
+        <h1 style="font-size: 5rem; font-weight: 900; letter-spacing: -2.5px; margin-bottom: 24px; line-height: 1.1; margin-top: 0;">
+          YouSaver
+        </h1>
+        <h2 style="font-size: 2rem; font-weight: 700; color: #e4e4e7; margin-bottom: 24px; letter-spacing: -0.5px;">
+          원하는 <span style="background: linear-gradient(135deg, #3b82f6, #22c55e); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">품질</span>로, 원하는 <span style="background: linear-gradient(135deg, #3b82f6, #22c55e); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">형식</span>으로 다운로드
+        </h2>
+        <p style="font-size: 1.15rem; color: #a1a1aa; max-width: 680px; margin: 0 auto 50px; line-height: 1.8;">
+          비디오 해상도와 오디오 비트레이트를 <strong style="color:#fff;">독립적으로 선택</strong>하여<br/>
+          최적의 조합을 만들어 보세요.<br/>
+          5단계 안내를 따라 클릭만으로 간편하게 다운로드할 수 있습니다.
+        </p>
+      </section>
+
+      <!-- Features -->
+      <section style="max-width: 1000px; margin: 0 auto; padding: 0 20px; position: relative; z-index: 1;">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; margin-bottom: 80px;">
+          
+          <div style="background: #09090b; border: 1px solid rgba(255,255,255,0.06); border-radius: 20px; padding: 36px;">
+            <div style="font-size: 2.2rem; margin-bottom: 16px;">🎬</div>
+            <h3 style="font-size: 1.15rem; font-weight: 700; margin-bottom: 8px; color: #fff;">Video & Audio</h3>
+            <p style="color: #a1a1aa; line-height: 1.6; font-size: 0.95rem; margin: 0;">
+              비디오+오디오 병합 다운로드 또는 오디오만 추출. 포맷을 자유롭게 선택하세요.
+            </p>
+          </div>
+
+          <div style="background: #09090b; border: 1px solid rgba(255,255,255,0.06); border-radius: 20px; padding: 36px;">
+            <div style="font-size: 2.2rem; margin-bottom: 16px;">📊</div>
+            <h3 style="font-size: 1.15rem; font-weight: 700; margin-bottom: 8px; color: #fff;">품질 독립 선택</h3>
+            <p style="color: #a1a1aa; line-height: 1.6; font-size: 0.95rem; margin: 0;">
+              비디오 해상도(1080p, 720p...)와 오디오 비트레이트(128kbps...)를 각각 선택 가능.
+            </p>
+          </div>
+
+          <div style="background: #09090b; border: 1px solid rgba(255,255,255,0.06); border-radius: 20px; padding: 36px;">
+            <div style="font-size: 2.2rem; margin-bottom: 16px;">🚀</div>
+            <h3 style="font-size: 1.15rem; font-weight: 700; margin-bottom: 8px; color: #fff;">빠른 다운로드</h3>
+            <p style="color: #a1a1aa; line-height: 1.6; font-size: 0.95rem; margin: 0;">
+              4개 동시 단편 다운로드로 최대 속도를 보장. 실시간 진행률, 속도, ETA 표시.
+            </p>
+          </div>
+
+          <div style="background: #09090b; border: 1px solid rgba(255,255,255,0.06); border-radius: 20px; padding: 36px;">
+            <div style="font-size: 2.2rem; margin-bottom: 16px;">📝</div>
+            <h3 style="font-size: 1.15rem; font-weight: 700; margin-bottom: 8px; color: #fff;">파일명 커스텀</h3>
+            <p style="color: #a1a1aa; line-height: 1.6; font-size: 0.95rem; margin: 0;">
+              영상 제목이 자동으로 입력되며, 원하는 이름으로 자유롭게 변경할 수 있습니다.
+            </p>
+          </div>
+
+          <div style="background: #09090b; border: 1px solid rgba(255,255,255,0.06); border-radius: 20px; padding: 36px;">
+            <div style="font-size: 2.2rem; margin-bottom: 16px;">🪶</div>
+            <h3 style="font-size: 1.15rem; font-weight: 700; margin-bottom: 8px; color: #fff;">경량 설계</h3>
+            <p style="color: #a1a1aa; line-height: 1.6; font-size: 0.95rem; margin: 0;">
+              커스텀 빌드된 경량 ffmpeg 탑재. 앱 전체 크기 38MB로 가볍고 빠릅니다.
+            </p>
+          </div>
+
+          <div style="background: #09090b; border: 1px solid rgba(255,255,255,0.06); border-radius: 20px; padding: 36px;">
+            <div style="font-size: 2.2rem; margin-bottom: 16px;">🖥️</div>
+            <h3 style="font-size: 1.15rem; font-weight: 700; margin-bottom: 8px; color: #fff;">네이티브 macOS</h3>
+            <p style="color: #a1a1aa; line-height: 1.6; font-size: 0.95rem; margin: 0;">
+              SwiftUI로 제작된 순정 macOS 앱. macOS 14 Sonoma 이상에서 최적 동작합니다.
+            </p>
+          </div>
+        </div>
+
+        <!-- Download & Serial Section -->
+        <div style="background: linear-gradient(135deg, #09090b 0%, #0a0a1a 100%); border: 1px solid rgba(59,130,246,0.2); border-radius: 28px; padding: 60px 40px; text-align: center; box-shadow: inset 0 0 40px rgba(59,130,246,0.05), 0 20px 60px rgba(0,0,0,0.5);">
+          
+          <h3 style="font-size: 1.8rem; font-weight: 800; margin-bottom: 8px; color: #fff;">다운로드 & 활성화</h3>
+          <p style="color: #a1a1aa; margin-bottom: 32px; font-size: 0.95rem;">
+            매일 제한된 수량만 발급됩니다. 앱을 다운로드한 후 일련번호를 입력하여 활성화하세요.
+          </p>
+
+          <!-- Status -->
+          <div id="status-area" style="margin-bottom: 32px;">
+            <span class="remaining-badge" id="remaining-badge" style="background: rgba(59,130,246,0.15); color: #93c5fd; border: 1px solid rgba(59,130,246,0.3);">
+              남은 발급 수 확인 중...
+            </span>
+          </div>
+
+          <!-- Buttons -->
+          <div style="display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; margin-bottom: 32px;">
+            <a href="#" id="download-btn" class="action-btn" style="background: #ffffff; color: #000000;" onclick="return false;">
+              ⬇️ YouSaver.dmg 다운로드
+            </a>
+            <button id="generate-btn" class="action-btn" style="background: linear-gradient(135deg, #2563eb, #22c55e); color: #ffffff;">
+              🔑 일련번호 발급받기
+            </button>
+          </div>
+
+          <!-- Serial Result -->
+          <div id="serial-result"></div>
+
+          <p style="color: #52525b; font-size: 0.8rem; margin-top: 24px;">
+            macOS 14.0 (Sonoma) 이상 · Apple Silicon
+          </p>
+        </div>
+      </section>
+
+    </main>
+    <script type="module" src="/src/main.js"></script>
+    <script>
+      const API_BASE = '';
+
+      async function checkStatus() {
+        try {
+          const res = await fetch(API_BASE + '/api/yousaver/serial/status');
+          const data = await res.json();
+          const badge = document.getElementById('remaining-badge');
+          const btn = document.getElementById('generate-btn');
+          if (data.remaining > 0) {
+            badge.textContent = `오늘 남은 발급 수: ${data.remaining}/${data.limit}`;
+            badge.style.background = 'rgba(34,197,94,0.15)';
+            badge.style.color = '#86efac';
+            badge.style.borderColor = 'rgba(34,197,94,0.3)';
+          } else {
+            badge.textContent = '오늘의 발급이 마감되었습니다. 내일 다시 방문해주세요!';
+            badge.style.background = 'rgba(239,68,68,0.15)';
+            badge.style.color = '#fca5a5';
+            badge.style.borderColor = 'rgba(239,68,68,0.3)';
+            btn.disabled = true;
+          }
+        } catch(e) {
+          document.getElementById('remaining-badge').textContent = '상태 확인 실패';
+        }
+      }
+
+      document.getElementById('generate-btn').addEventListener('click', async function() {
+        const btn = this;
+        const result = document.getElementById('serial-result');
+        btn.disabled = true;
+        btn.textContent = '발급 중...';
+
+        try {
+          const res = await fetch(API_BASE + '/api/yousaver/serial/generate', { method: 'POST' });
+          const data = await res.json();
+
+          if (res.ok && data.serial) {
+            result.innerHTML = `
+              <div class="serial-display" title="클릭하여 복사" onclick="navigator.clipboard.writeText('${data.serial}').then(()=>this.style.borderColor='#22c55e')">${data.serial}</div>
+              <p style="color: #86efac; font-size: 0.9rem; margin: 0;">✅ 위 일련번호를 클릭하여 복사한 후, 앱에 입력하세요</p>
+            `;
+            btn.textContent = '🔑 발급 완료';
+            checkStatus();
+          } else {
+            result.innerHTML = `<p style="color: #fca5a5; font-size: 0.95rem;">${data.message || '발급에 실패했습니다.'}</p>`;
+            btn.textContent = '🔑 일련번호 발급받기';
+            btn.disabled = false;
+          }
+        } catch(e) {
+          result.innerHTML = `<p style="color: #fca5a5;">네트워크 오류가 발생했습니다.</p>`;
+          btn.textContent = '🔑 일련번호 발급받기';
+          btn.disabled = false;
+        }
+      });
+
+      checkStatus();
+    </script>
+  </body>
+</html>
