@@ -8,6 +8,27 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+      @media (max-width: 768px) {
+        .about-hero-title { font-size: 2.4rem !important; }
+        .about-hero-desc { font-size: 1.05rem !important; }
+        .about-quote-box { padding: 30px 24px !important; border-radius: 24px !important; }
+        .about-quote-text { font-size: 1.05rem !important; }
+        .about-brand-section { margin-top: 60px !important; }
+        .about-brand-title { font-size: 1.6rem !important; margin-bottom: 30px !important; }
+        .about-brand-box { padding: 28px 24px !important; border-radius: 20px !important; gap: 24px !important; }
+        .about-brand-icon { width: 100px !important; height: 100px !important; }
+        .about-brand-icon span { font-size: 1.4rem !important; }
+        .about-brand-logo { width: 100px !important; }
+        .about-brand-content { min-width: 0 !important; }
+        .about-brand-content h4 { font-size: 1.2rem !important; margin-bottom: 10px !important; }
+        .about-brand-content p { font-size: 0.95rem !important; }
+        .about-biz-wrapper { margin-top: 60px !important; }
+        .about-biz-box { padding: 30px 24px !important; border-radius: 20px !important; }
+        .about-biz-label { min-width: 100px !important; }
+        .about-section { padding-bottom: 80px !important; }
+      }
+    </style>
   </head>
   <body>
     <main class="fade-in-up" style="background: linear-gradient(180deg, #ffffff 0%, #f1f5f9 100%); position: relative; min-height: 100vh;">
@@ -16,24 +37,24 @@
       <!-- Dot Pattern Overlay -->
       <div style="position: absolute; inset: 0; background-image: radial-gradient(rgba(0,0,0,0.04) 1px, transparent 0); background-size: 30px 30px; pointer-events: none; z-index: 0;"></div>
 
-      <section id="about" style="position: relative; z-index: 1; padding-bottom: 120px;">
+      <section id="about" class="about-section" style="position: relative; z-index: 1; padding-bottom: 120px;">
 
         <div style="text-align: center; margin-top: 80px; margin-bottom: 60px; padding: 0 20px;">
           <div style="display: inline-block; padding: 8px 24px; background: rgba(37, 99, 235, 0.08); color: #2563eb; border-radius: 30px; font-weight: 700; font-size: 0.85rem; letter-spacing: 1px; margin-bottom: 24px;">
             WHO WE ARE
           </div>
-          <h2 style="font-size: 4rem; font-weight: 800; line-height: 1.1; letter-spacing: -1.5px; margin-bottom: 24px;">
+          <h2 class="about-hero-title" style="font-size: 4rem; font-weight: 800; line-height: 1.1; letter-spacing: -1.5px; margin-bottom: 24px;">
             경계를 넘어선<br/>
             <span style="background: linear-gradient(135deg, #2563eb, #9333ea); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">완벽한 사용자 경험</span>
           </h2>
-          <p style="font-size: 1.25rem; color: var(--text-secondary); max-width: 680px; margin: 0 auto; line-height: 1.7;">
+          <p class="about-hero-desc" style="font-size: 1.25rem; color: var(--text-secondary); max-width: 680px; margin: 0 auto; line-height: 1.7;">
             Cordia는 타협 없는 성능을 바탕으로 <strong>macOS, Windows, Android, 웹</strong> 등 플랫폼의 장벽을 넘어 당신의 워크플로우를 극대화하는 가장 본질적인 도구를 설계합니다.
           </p>
         </div>
 
         <div style="max-width: 900px; margin: 0 auto; padding: 0 20px;">
-          <div style="background: rgba(255, 255, 255, 0.6); backdrop-filter: blur(20px); border: 1px solid rgba(0,0,0,0.05); border-radius: 32px; padding: 50px; text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.02);">
-            <p style="font-size: 1.2rem; color: var(--text-primary); line-height: 1.8; font-weight: 500; margin-bottom: 30px;">
+          <div class="about-quote-box" style="background: rgba(255, 255, 255, 0.6); backdrop-filter: blur(20px); border: 1px solid rgba(0,0,0,0.05); border-radius: 32px; padding: 50px; text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.02);">
+            <p class="about-quote-text" style="font-size: 1.2rem; color: var(--text-primary); line-height: 1.8; font-weight: 500; margin-bottom: 30px;">
               "우리는 사용자가 매일 반복하는 작업 속에서 겪는 치명적인 불편함에 집중합니다."
             </p>
             <p style="font-size: 1.05rem; color: var(--text-secondary); line-height: 1.8;">
@@ -43,16 +64,16 @@
           </div>
         </div>
 
-        <div style="max-width: 1000px; margin: 100px auto 0; padding: 0 20px;">
-          <h3 style="font-size: 2.2rem; font-weight: 800; text-align: center; margin-bottom: 50px; color: var(--text-primary); letter-spacing: -0.5px;">Cordia 브랜드 정체성</h3>
+        <div class="about-brand-section" style="max-width: 1000px; margin: 100px auto 0; padding: 0 20px;">
+          <h3 class="about-brand-title" style="font-size: 2.2rem; font-weight: 800; text-align: center; margin-bottom: 50px; color: var(--text-primary); letter-spacing: -0.5px;">Cordia 브랜드 정체성</h3>
           
           <div style="display: flex; flex-direction: column; gap: 40px;">
             <!-- Brand Box 1 -->
-            <div style="background: linear-gradient(135deg, #ffffff, #fafafa); border: 1px solid rgba(0,0,0,0.04); border-radius: 28px; padding: 40px 50px; box-shadow: 0 15px 35px rgba(0,0,0,0.03); position: relative; overflow: hidden; display: flex; align-items: center; gap: 50px; transition: transform 0.4s ease; flex-wrap: wrap;">
-              <div style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; width: 160px; height: 160px; background: rgba(37,99,235,0.03); border-radius: 50%; border: 1px solid rgba(37,99,235,0.1);">
+            <div class="about-brand-box" style="background: linear-gradient(135deg, #ffffff, #fafafa); border: 1px solid rgba(0,0,0,0.04); border-radius: 28px; padding: 40px 50px; box-shadow: 0 15px 35px rgba(0,0,0,0.03); position: relative; overflow: hidden; display: flex; align-items: center; gap: 50px; transition: transform 0.4s ease; flex-wrap: wrap;">
+              <div class="about-brand-icon" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; width: 160px; height: 160px; background: rgba(37,99,235,0.03); border-radius: 50%; border: 1px solid rgba(37,99,235,0.1);">
                 <span style="font-size: 2rem; font-weight: 800; letter-spacing: -1px; background: linear-gradient(135deg, #2563eb, #9333ea); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Cordia.</span>
               </div>
-              <div style="flex: 1; min-width: 300px; z-index: 1;">
+              <div class="about-brand-content" style="flex: 1; min-width: 300px; z-index: 1;">
                 <h4 style="font-size: 1.6rem; font-weight: 800; color: #18181b; margin-bottom: 16px;">
                   이름: 마음이 모이는 곳
                 </h4>
@@ -64,11 +85,11 @@
             </div>
 
             <!-- Brand Box 2 (Dark Theme) -->
-            <div style="background: linear-gradient(135deg, #18181b, #27272a, #09090b); border: 1px solid rgba(255,255,255,0.1); border-radius: 28px; padding: 40px 50px; box-shadow: 0 30px 60px rgba(0,0,0,0.2), inset 0 2px 2px rgba(255,255,255,0.05); display: flex; align-items: center; gap: 50px; transition: transform 0.4s ease; flex-wrap: wrap;">
+            <div class="about-brand-box" style="background: linear-gradient(135deg, #18181b, #27272a, #09090b); border: 1px solid rgba(255,255,255,0.1); border-radius: 28px; padding: 40px 50px; box-shadow: 0 30px 60px rgba(0,0,0,0.2), inset 0 2px 2px rgba(255,255,255,0.05); display: flex; align-items: center; gap: 50px; transition: transform 0.4s ease; flex-wrap: wrap;">
               <div style="flex-shrink: 0; display: flex; align-items: center; justify-content: center;">
-                <img src="/logo.png" alt="Cordia Logo" style="width: 160px; filter: brightness(1.2); mix-blend-mode: normal;" />
+                <img class="about-brand-logo" src="/logo.png" alt="Cordia Logo" style="width: 160px; filter: brightness(1.2); mix-blend-mode: normal;" />
               </div>
-              <div style="flex: 1; min-width: 300px;">
+              <div class="about-brand-content" style="flex: 1; min-width: 300px;">
                 <h4 style="font-size: 1.6rem; font-weight: 800; color: #ffffff; margin-bottom: 16px;">
                   로고: 네트워크로 연결된 하트(Heart)
                 </h4>
@@ -81,24 +102,24 @@
           </div>
         </div>
 
-        <div style="max-width: 700px; margin: 100px auto 0; padding: 0 20px;">
-          <div style="background: rgba(255, 255, 255, 0.5); backdrop-filter: blur(16px); border: 1px solid rgba(0,0,0,0.06); border-radius: 24px; padding: 40px 44px; box-shadow: 0 10px 30px rgba(0,0,0,0.02);">
+        <div class="about-biz-wrapper" style="max-width: 700px; margin: 100px auto 0; padding: 0 20px;">
+          <div class="about-biz-box" style="background: rgba(255, 255, 255, 0.5); backdrop-filter: blur(16px); border: 1px solid rgba(0,0,0,0.06); border-radius: 24px; padding: 40px 44px; box-shadow: 0 10px 30px rgba(0,0,0,0.02);">
             <h3 style="font-size: 1.3rem; font-weight: 800; color: var(--text-primary); margin-bottom: 28px; letter-spacing: -0.3px;">사업 정보</h3>
             <div style="display: flex; flex-direction: column; gap: 14px; font-size: 0.95rem; color: var(--text-secondary); line-height: 1.6;">
               <div style="display: flex; gap: 12px;">
-                <span style="flex-shrink: 0; min-width: 120px; font-weight: 600; color: var(--text-primary);">상호</span>
+                <span class="about-biz-label" style="flex-shrink: 0; min-width: 120px; font-weight: 600; color: var(--text-primary);">상호</span>
                 <span>코르디아</span>
               </div>
               <div style="display: flex; gap: 12px;">
-                <span style="flex-shrink: 0; min-width: 120px; font-weight: 600; color: var(--text-primary);">대표</span>
+                <span class="about-biz-label" style="flex-shrink: 0; min-width: 120px; font-weight: 600; color: var(--text-primary);">대표</span>
                 <span>정재은</span>
               </div>
               <div style="display: flex; gap: 12px;">
-                <span style="flex-shrink: 0; min-width: 120px; font-weight: 600; color: var(--text-primary);">사업자등록번호</span>
+                <span class="about-biz-label" style="flex-shrink: 0; min-width: 120px; font-weight: 600; color: var(--text-primary);">사업자등록번호</span>
                 <span>376-58-01101</span>
               </div>
               <div style="display: flex; gap: 12px;">
-                <span style="flex-shrink: 0; min-width: 120px; font-weight: 600; color: var(--text-primary);">주소</span>
+                <span class="about-biz-label" style="flex-shrink: 0; min-width: 120px; font-weight: 600; color: var(--text-primary);">주소</span>
                 <span>경기도 화성시 만세구 향남읍 동오3길 62</span>
               </div>
             </div>
